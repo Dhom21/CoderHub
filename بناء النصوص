@@ -1,0 +1,31 @@
+public static String string_builder(String expression) {
+    Stack<String> stack = new Stack<>();
+    StringBuilder result = new StringBuilder();
+    
+    for (int i = 0; i < expression.length(); i++) {
+        char ch = expression.charAt(i);
+        if (ch == ']') {
+            String str = "";
+            while (!stack.peek().equals("[")) {
+                str = stack.pop() + str;
+            }
+            stack.pop(); // remove the opening bracket
+            int repeat = 0;
+            int factor = 1;
+            while (!stack.isEmpty() && Character.isDigit(stack.peek().charAt(0))) {
+                repeat += (stack.pop().charAt(0) - '0') * factor;
+                factor *= 10;
+            }
+            String repeatedStr = String.join("", Collections.nCopies(repeat, str));
+            stack.push(repeatedStr);
+        } else {
+            stack.push(Character.toString(ch));
+        }
+    }
+    
+    while (!stack.isEmpty()) {
+        result.insert(0, stack.pop());
+    }
+    
+    return result.toString();
+}
